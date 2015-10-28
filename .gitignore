@@ -3,4 +3,6 @@ Library
 ProjectSettings
 Temp
 *~
-.suo
+*.suo
+*.sln
+*.csproj
