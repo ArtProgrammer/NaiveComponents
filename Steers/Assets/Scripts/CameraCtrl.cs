@@ -69,8 +69,8 @@ public class CameraCtrl : MonoBehaviour {
 
     void updateCamera()
     {
-        float pitchRad = Pitch * Mathf.PI / 180.0f;
-        float yawRad = Yaw * Mathf.PI / 180.0f;
+        float pitchRad = Pitch * Mathf.Deg2Rad;
+        float yawRad = Yaw * Mathf.Deg2Rad;
 
         Position =
             new Vector3(Distance * Mathf.Cos(pitchRad) * Mathf.Sin(yawRad),
