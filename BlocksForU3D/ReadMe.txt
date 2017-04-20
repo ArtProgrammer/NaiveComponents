@@ -1,0 +1,1 @@
+* Core functional blocks for u3d game project 
