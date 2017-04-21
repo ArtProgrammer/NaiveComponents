@@ -8,7 +8,7 @@ namespace Chuizi
 {
     public class FzSet : FuzzyTerm
     {
-        private FuzzySet FSet;
+        public FuzzySet FSet;
 
         public FzSet(FuzzySet fs) { FSet = fs; }
 

@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 
 namespace Chuizi
 {
-    public class FuzzySet_Triangle : FuzzySet
+    public class FuzzySet_LeftShoulder : FuzzySet
     {
         private double PeakPoint;
-        private double LeftOffset;
         private double RightOffset;
+        private double LeftOffset;
 
-        public FuzzySet_Triangle(double mid, double lft, double rgt) : base(mid)
+        public FuzzySet_LeftShoulder(double peak,
+            double lftoffset,
+            double rftoffset) : base(((peak - lftoffset) + peak) / 2)
         {
-
-            PeakPoint = mid;
-            LeftOffset = lft;
-            RightOffset = rgt;
+            PeakPoint = peak;
+            RightOffset = rftoffset;
+            LeftOffset = lftoffset;
         }
 
         public override double CalculateDOM(double val)
@@ -27,21 +28,20 @@ namespace Chuizi
             {
                 return 1.0;
             }
-
-            if (val <= PeakPoint && val >= (PeakPoint - LeftOffset))
-            {
-                double grad = 1.0 / LeftOffset;
-
-                return grad * (val - (PeakPoint - LeftOffset));
-            }
-            else if (val > PeakPoint && val < (PeakPoint + RightOffset))
+            else if ((val >= PeakPoint) && 
+                (val < (PeakPoint + RightOffset)))
             {
                 double grad = 1.0 / -RightOffset;
                 return grad * (val - PeakPoint) + 1.0;
             }
+            else if ((val < PeakPoint) &&
+                (val >= PeakPoint - LeftOffset))
+            {
+                return 1.0;
+            }
             else
             {
-                return base.CalculateDOM(val);
+                return 0.0;
             }
         }
     }

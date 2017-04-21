@@ -17,38 +17,68 @@ namespace ConsoleApplication1
             FuzzyVariable Dist2Target = fm.CreateFLV("Dist2Target");
             FuzzyVariable Desirability = fm.CreateFLV("Desirability");
             FuzzyVariable AmmoStatus = fm.CreateFLV("AmmoStatus");
-
-            FzSet Target_Close = Dist2Target.AddTrianglularSet("Target_Close",
+            
+            FzSet Target_Close = Dist2Target.AddLeftShoulderSet("Target_Close",
                 0, 25, 150);
             FzSet Target_Medium = Dist2Target.AddTrianglularSet("Target_Medium",
                 25, 150, 300);
-            FzSet Target_Far = Dist2Target.AddTrianglularSet("Target_Far",
-                150, 300, 500);
+            FzSet Target_Far = Dist2Target.AddRightShoulderSet("Target_Far",
+                150, 300, 400);
 
-            FzSet Ammon_low = AmmoStatus.AddTrianglularSet("Ammon_low",
+            FzSet Ammon_low = AmmoStatus.AddLeftShoulderSet("Ammon_low",
                 0, 0, 10);
-            FzSet Ammon_OKAY = AmmoStatus.AddTrianglularSet("Ammon_OKAY",
+            FzSet Ammon_Okay = AmmoStatus.AddTrianglularSet("Ammon_Okay",
                 0, 10, 30);
-            FzSet Ammon_Loads = AmmoStatus.AddTrianglularSet("Ammon_Loads",
+            FzSet Ammon_Loads = AmmoStatus.AddRightShoulderSet("Ammon_Loads",
                 10, 30, 40);
 
-            FzSet Undesirable = Desirability.AddTrianglularSet("Undesirable",
+            FzSet Undesirable = Desirability.AddLeftShoulderSet("Undesirable",
                 0, 25, 50);
             FzSet Desirable = Desirability.AddTrianglularSet("Desirable",
                 25, 50, 75);
-            FzSet VeryDesirable = Desirability.AddTrianglularSet("VeryDesirable",
+            FzSet VeryDesirable = Desirability.AddRightShoulderSet("VeryDesirable",
                 50, 75, 100);
 
-            fm.AddRule(Target_Far, Undesirable);
-            fm.AddRule(Target_Medium, Desirable);
-            fm.AddRule(Target_Close, VeryDesirable);
+            bool Combos = true;
 
-            fm.AddRule(Ammon_low, Undesirable);
-            fm.AddRule(Ammon_OKAY, Desirable);
-            fm.AddRule(Ammon_Loads, VeryDesirable);
+            if (Combos) {
+                fm.AddRule((Target_Far), Undesirable);
+                fm.AddRule((Target_Medium), VeryDesirable);
+                fm.AddRule((Target_Close), Undesirable);
+                fm.AddRule((Ammon_Loads), VeryDesirable);
+                fm.AddRule((Ammon_Okay), Desirable);
+                fm.AddRule((Ammon_low), Undesirable);
 
-            fm.Fuzzify("Dist2Target", 25);
-            fm.Fuzzify("AmmoStatus", 30);
+                //fm.AddRule(new FzFairly(Target_Far), Undesirable);
+                //fm.AddRule(new FzFairly(Target_Medium), VeryDesirable);
+                //fm.AddRule(new FzFairly(Target_Close), Undesirable);
+                //fm.AddRule(new FzFairly(Ammon_Loads), VeryDesirable);
+                //fm.AddRule(new FzFairly(Ammon_Okay), Desirable);
+                //fm.AddRule(new FzFairly(Ammon_low), Undesirable);
+
+                //fm.AddRule(new FzVery(Target_Far), Undesirable);
+                //fm.AddRule(new FzVery(Target_Medium), VeryDesirable);
+                //fm.AddRule(new FzVery(Target_Close), Undesirable);
+                //fm.AddRule(new FzVery(Ammon_Loads), VeryDesirable);
+                //fm.AddRule(new FzVery(Ammon_Okay), Desirable);
+                //fm.AddRule(new FzVery(Ammon_low), Undesirable);
+            } else
+            {
+                fm.AddRule(new FzAND(Target_Far, Ammon_Loads), Desirable);
+                fm.AddRule(new FzAND(Target_Far, Ammon_Okay), Undesirable);
+                fm.AddRule(new FzAND(Target_Far, Ammon_low), Undesirable);
+
+                fm.AddRule(new FzAND(Target_Medium, Ammon_Loads), VeryDesirable);
+                fm.AddRule(new FzAND(Target_Medium, Ammon_Okay), VeryDesirable);
+                fm.AddRule(new FzAND(Target_Medium, Ammon_low), Desirable);
+
+                fm.AddRule(new FzAND(Target_Close, Ammon_Loads), Undesirable);
+                fm.AddRule(new FzAND(Target_Close, Ammon_Okay), Undesirable);
+                fm.AddRule(new FzAND(Target_Close, Ammon_low), Undesirable);
+            }
+
+            fm.Fuzzify("Dist2Target", 200);
+            fm.Fuzzify("AmmoStatus", 8);
 
             double result = fm.Defuzzify("Desirability", FuzzyModule.DefuzzifyMethod.max_av);
 

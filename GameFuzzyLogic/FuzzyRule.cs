@@ -35,7 +35,7 @@ namespace Chuizi
 
         public void Calculate()
         {
-            Consequence.ORwithDOM(Antecedent.GetDOM()); // ???
+            Consequence.ORwithDOM(Antecedent.GetDOM());
         }
     }
 }

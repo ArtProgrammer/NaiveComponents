@@ -36,28 +36,37 @@ namespace Chuizi
             MaxRange = 0.0;
         }
 
-        //public FzSet AddLeftShoulderSet(string name, double minBound, double peak, double maxBound)
-        //{
-
-        //}
-
-        //public FzSet AddRightShoulderSet(string name, double minBound, double peak, double maxBound)
-        //{
-
-        //}
-
-        public FzSet AddTrianglularSet(string name, double minBound, double peak, double maxBound)
+        public FzSet AddLeftShoulderSet(string name, double minBound, double peak, double maxBound)
         {
-            MemberSets.Add(name, new FuzzySet_Triangle(peak, peak-minBound, maxBound - peak));
+            MemberSets[name] = new FuzzySet_LeftShoulder(peak, peak - minBound, maxBound - peak);
             AdjustRangeToFit(minBound, maxBound);
 
             return new FzSet(MemberSets[name]);
         }
 
-        //public FzSet AddSingletonSet(string name, double minBound, double peak, double maxBound)
-        //{
+        public FzSet AddRightShoulderSet(string name, double minBound, double peak, double maxBound)
+        {
+            MemberSets[name] = new FuzzySet_RightShoulder(peak, peak - minBound, maxBound - peak);
+            AdjustRangeToFit(minBound, maxBound);
 
-        //}
+            return new FzSet(MemberSets[name]);
+        }
+
+        public FzSet AddTrianglularSet(string name, double minBound, double peak, double maxBound)
+        {
+            MemberSets[name] = new FuzzySet_Triangle(peak, peak - minBound, maxBound - peak);
+            AdjustRangeToFit(minBound, maxBound);
+
+            return new FzSet(MemberSets[name]);
+        }
+
+        public FzSet AddSingletonSet(string name, double minBound, double peak, double maxBound)
+        {
+            MemberSets[name] = new FuzzySet_Singleton(peak, peak - minBound, maxBound - peak);
+            AdjustRangeToFit(minBound, maxBound);
+
+            return new FzSet(MemberSets[name]);
+        }
 
         public void Fuzzify(double val)
         {
@@ -82,7 +91,7 @@ namespace Chuizi
                 top += item.Value.GetRepresentativeVal() * item.Value.GetDOM();
             }
 
-            if (Math.Equals(0, bottom)) return 0.0;
+            if (Double.Equals(0.0, bottom)) return 0.0;
 
             return top / bottom;
         }
@@ -108,7 +117,7 @@ namespace Chuizi
                 }
             }
 
-            if (Math.Equals(0, totalArea)) return 0;
+            if (Double.Equals(0.0, totalArea)) return 0;
             return sumOfMoments / totalArea;
         }
     }
