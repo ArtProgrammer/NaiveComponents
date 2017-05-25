@@ -12,7 +12,7 @@ namespace CSharpClass.FSM
             set; get;
         }
 
-        List<State> StateList = new List<State>();
+        Dictionary<string, State> StateList = new Dictionary<string, State>();
 
         State CurrentState = null;
 
@@ -20,16 +20,18 @@ namespace CSharpClass.FSM
 
         State GlobalState = null;
 
-        public void AddState(State s)
+        public void AddState(string name, State s)
         {
-            StateList.Add(s);
+	    if (!StateList.ContainsKey(name)) {
+		StateList.Add(name, s);
 
-            s.RecordFSM(this);
+		s.RecordFSM(this);
+	    }
         }
 
-        public void RemoveState(State s)
+        public void RemoveState(string name)
         {
-            StateList.Remove(s);
+            StateList.Remove(name);
         }
         
         public void Excute()
@@ -39,6 +41,14 @@ namespace CSharpClass.FSM
                 CurrentState.Excute(Owner);
             }
         }
+	
+	public void TransferToState(name)
+	{
+	    if (StateList.ContainsKey(name))
+	    {
+		TransferToState(StateList[name]);
+	    }
+	}
 
         public void TransferToState(State s)
         {
